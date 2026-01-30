@@ -199,7 +199,7 @@ function closeProfile(){
 function renderProfileDrawer(){
   const u = JSON.parse(localStorage.getItem("authUser")||"null");
   const helloUser = document.getElementById("helloUser");
-  if(helloUser) helloUser.innerText = u ? ("Olá, "+(u.login||u.email)) : "Bem-vindo!";
+  if(helloUser) helloUser.innerText = u ? ("Olá, "+(u.name||u.login||u.email)) : "Bem-vindo!";
   const emailEl = document.getElementById("profileEmail");
   const cpfEl = document.getElementById("profileCPF");
   if(emailEl) emailEl.value = u && u.email ? u.email : "";
@@ -690,6 +690,14 @@ function injectAuthModal(){
       </div>
       <div id="authExtra" style="display:none">
         <div class="auth-group">
+          <label>Nome completo</label>
+          <input id="authName" type="text" class="auth-input" placeholder="Seu nome completo">
+        </div>
+        <div class="auth-group">
+          <label>Telefone</label>
+          <input id="authPhone" type="text" class="auth-input" placeholder="(DDD) 90000-0000">
+        </div>
+        <div class="auth-group">
           <label>CPF</label>
           <input id="authCPF" type="text" class="auth-input" placeholder="000.000.000-00">
         </div>
@@ -718,6 +726,22 @@ function injectAuthModal(){
   const cpfInput = document.getElementById("authCPF");
   if(cpfInput){
     cpfInput.addEventListener("input", ()=>{ cpfInput.value = formatCPF(cpfInput.value); });
+  }
+  const phoneInput = document.getElementById("authPhone");
+  if(phoneInput){
+    phoneInput.addEventListener("input", ()=>{
+      const s = String(phoneInput.value||"").replace(/\D/g,"").slice(0,11);
+      const ddd = s.slice(0,2);
+      const p1 = s.length>10 ? s.slice(2,3) : "";
+      const mid = s.length>10 ? s.slice(3,7) : s.slice(2,6);
+      const end = s.length>10 ? s.slice(7,11) : s.slice(6,10);
+      let out = "";
+      if(ddd) out += "("+ddd+") ";
+      if(p1) out += p1;
+      if(mid) out += (p1?"":"") + (p1?mid:mid);
+      if(end) out += "-" + end;
+      phoneInput.value = out;
+    });
   }
 }
 
@@ -773,11 +797,13 @@ function handleAuthSubmit(){
       password: pending.password,
       cpf: pending.cpf,
       login: pending.login,
+      name: pending.name,
+      phone: pending.phone,
       sessionVersion: 0
     });
     saveUsers(users);
     postUserToDB({ email, login: pending.login || email, cpf: pending.cpf, password: pending.password });
-    setAuthUser({ email, cpf: pending.cpf, login: pending.login });
+    setAuthUser({ email, cpf: pending.cpf, login: pending.login, name: pending.name, phone: pending.phone });
     localStorage.removeItem("pendingVerify");
     closeAuth();
     if(typeof pendingAuthNext === "function"){ const fn = pendingAuthNext; pendingAuthNext=null; fn(); }
@@ -795,13 +821,18 @@ function handleAuthSubmit(){
     const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     if(!emailOk){ alert("Use um e-mail válido."); return; }
     if(users.find(x=>x.email===email)){ alert("E-mail já cadastrado."); return; }
+    const name = document.getElementById("authName").value.trim();
+    if(!name || name.length<3){ alert("Informe seu nome completo."); return; }
     const cpf = document.getElementById("authCPF").value.trim();
     if(!cpf){ alert("Informe seu CPF."); return; }
     if(!validateCPF(cpf)){ alert("CPF inválido."); return; }
+    const phone = document.getElementById("authPhone").value.trim();
+    const phoneDigits = phone.replace(/\D/g,"");
+    if(phoneDigits.length<10){ alert("Informe um telefone válido."); return; }
     const login = document.getElementById("authLogin").value.trim();
     if(!login || login.length<3){ alert("Informe um login válido (mín. 3 caracteres)."); return; }
     const code = generateCode();
-    localStorage.setItem("pendingVerify", JSON.stringify({ email, password, code, cpf, login }));
+    localStorage.setItem("pendingVerify", JSON.stringify({ email, password, code, cpf, login, name, phone }));
     sendVerificationCode(email, code);
     document.getElementById("authEmail").value = email;
     document.getElementById("authEmail").setAttribute("readonly","readonly");
@@ -825,11 +856,7 @@ function generateCode(){
   return String(Math.floor(100000 + Math.random()*900000));
 }
 async function sendVerificationCode(email, code){
-  // Exibir código via Toast para garantir que o usuário veja (Simulação/Fallback)
-  showToast("Código de verificação: " + code, 10000);
-  
   try{
-    // Tenta enviar para o backend (server.py)
     const res = await fetch("/send_code.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -838,9 +865,12 @@ async function sendVerificationCode(email, code){
     const data = await res.json().catch(()=>({ok:false}));
     if(data && data.ok){
       console.log("Código enviado para o backend simulado.");
+      showToast("Código de verificação enviado para seu e-mail.", 5000);
+    }else{
+      alert("Falha ao enviar o código por e-mail. Tente novamente.");
     }
   }catch(e){
-    console.log("Backend offline ou erro de rede. Código segue válido.");
+    alert("Erro de conexão ao enviar o código. Verifique sua internet e tente novamente.");
   }
 }
 
@@ -871,7 +901,7 @@ function resendVerification(){
   const email = document.getElementById("authEmail").value.trim();
   if(!pending || pending.email!==email){ alert("Solicite novamente o cadastro."); return; }
   const code = generateCode();
-  localStorage.setItem("pendingVerify", JSON.stringify({ email, password: pending.password, code, cpf: pending.cpf, login: pending.login }));
+  localStorage.setItem("pendingVerify", JSON.stringify({ email, password: pending.password, code, cpf: pending.cpf, login: pending.login, name: pending.name, phone: pending.phone }));
   sendVerificationCode(email, code);
 }
 
