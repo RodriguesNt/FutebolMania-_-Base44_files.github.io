@@ -187,7 +187,7 @@ footer .pay{padding:6px 10px;border:1px solid var(--border);border-radius:8px;ba
         <input id="searchInput" type="text" placeholder="O que você procura?">
       </div>
     </div>
-    <a class="brand" href="Home.html"><div class="logo">FS</div><span>FutShop</span></a>
+    <a class="brand" href="loja.html"><div class="logo">FS</div><span>FutShop</span></a>
     <div class="right-icons">
       <button id="openProfileBtn" class="icon-btn" title="Perfil">👤</button>
       <button id="openCartBtn" class="icon-btn cart-btn" title="Carrinho">🛒<span id="cartCountBadge" class="cart-count">0</span></button>
@@ -304,8 +304,28 @@ footer .pay{padding:6px 10px;border:1px solid var(--border);border-radius:8px;ba
   </header>
   <main>
     <div class="muted" id="helloUser" style="margin-bottom:8px"></div>
-    <label class="muted" style="margin-bottom:6px">Seu nome</label>
-    <div class="search" style="gap:6px"><input id="profileNameInput" type="text" placeholder="Digite seu nome"><button id="saveProfileBtn" class="small-btn">Salvar</button></div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+      <div id="profileAvatar" style="width:60px;height:60px;border-radius:999px;background:#111827;color:#e5e7eb;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem">U</div>
+      <input id="profileAvatarInput" type="file" accept="image/*" class="small-btn" style="padding:6px 10px">
+    </div>
+    <div class="muted" style="margin-bottom:6px">Dados básicos do usuário</div>
+    <div class="search" style="gap:6px"><input id="profileName" type="text" placeholder="Nome completo ou de exibição" disabled></div>
+    <div class="search" style="gap:6px"><input id="profilePhone" type="text" placeholder="Telefone / WhatsApp" disabled></div>
+    <div class="search" style="gap:6px"><input id="profileEmail" type="text" placeholder="Email" readonly></div>
+    <div class="search" style="gap:6px"><input id="profileCPF" type="text" placeholder="CPF" readonly></div>
+    <div class="search" style="gap:6px"><input id="profileAddress" type="text" placeholder="Endereço para entregas" disabled></div>
+    <div class="search" style="gap:6px"><input id="profileBirthdate" type="date" placeholder="Data de nascimento" disabled></div>
+    <div class="muted" style="margin:8px 0">🔐 Segurança</div>
+    <div class="search" style="gap:6px"><input id="changePassCurrent" type="password" placeholder="Senha atual"></div>
+    <div class="search" style="gap:6px"><input id="changePassNew" type="password" placeholder="Nova senha"></div>
+    <div class="search" style="gap:6px"><input id="changePassConfirm" type="password" placeholder="Confirmar nova senha"></div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button id="btnEditProfile" class="small-btn">Editar</button>
+      <button id="btnSaveProfile" class="small-btn" style="display:none">Salvar alterações</button>
+      <button id="btnCancelProfile" class="small-btn" style="display:none">Cancelar</button>
+      <button id="btnChangePass" class="small-btn">Alterar senha</button>
+      <button id="btnLogout" class="small-btn">Sair</button>
+    </div>
   </main>
   <footer></footer>
 </aside>

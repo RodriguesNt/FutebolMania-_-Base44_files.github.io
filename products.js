@@ -1,15 +1,15 @@
 const products = [
-  {id:"flamengo-home", name:"Flamengo 24/25 Home", league:"br", price:100, img:"./photo-1489944440615-453fc2b6a9a9", badge:"Destaque", featured:true, type:"torcedor"},
-  {id:"palmeiras-home", name:"Palmeiras 24/25 Home", league:"br", price:100, img:"./photo-1577212017184-80cc0da11082", featured:true, type:"torcedor"},
-  {id:"city-home", name:"Man City 24/25 Home", league:"pl", price:100, img:"./photo-1551854838-212c50b4c184", featured:true, type:"torcedor"},
-  {id:"brasil-home", name:"Brasil 24/25", league:"sel", price:100, img:"./photo-1489944440615-453fc2b6a9a9", type:"torcedor"},
-  {id:"real-home", name:"Real Madrid 24/25", league:"ll", price:100, img:"./photo-1551854838-212c50b4c184", type:"torcedor"},
-  {id:"barca-home", name:"Barcelona 24/25", league:"ll", price:100, img:"./photo-1577212017184-80cc0da11082", type:"torcedor"},
+  {id:"flamengo-home", name:"Flamengo 24/25 Home", league:"br", price:100, img:"https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?auto=format&fit=crop&w=800&q=80", badge:"Destaque", featured:true, type:"torcedor"},
+  {id:"palmeiras-home", name:"Palmeiras 24/25 Home", league:"br", price:100, img:"https://images.unsplash.com/photo-1577212017184-80cc0da11082?auto=format&fit=crop&w=800&q=80", featured:true, type:"torcedor"},
+  {id:"city-home", name:"Man City 24/25 Home", league:"pl", price:100, img:"https://images.unsplash.com/photo-1551854838-212c50b4c184?auto=format&fit=crop&w=800&q=80", featured:true, type:"torcedor"},
+  {id:"brasil-home", name:"Brasil 24/25", league:"sel", price:100, img:"https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?auto=format&fit=crop&w=800&q=80", type:"torcedor"},
+  {id:"real-home", name:"Real Madrid 24/25", league:"ll", price:100, img:"https://images.unsplash.com/photo-1551854838-212c50b4c184?auto=format&fit=crop&w=800&q=80", type:"torcedor"},
+  {id:"barca-home", name:"Barcelona 24/25", league:"ll", price:100, img:"https://images.unsplash.com/photo-1577212017184-80cc0da11082?auto=format&fit=crop&w=800&q=80", type:"torcedor"},
   
   // Novos produtos para testar as categorias
-  {id:"fla-short", name:"Short Flamengo 24/25", league:"br", price:115, img:"./photo-1489944440615-453fc2b6a9a9", type:"short"},
-  {id:"fla-wind", name:"Corta Vento Flamengo", league:"br", price:270, img:"./photo-1577212017184-80cc0da11082", type:"cortavento"},
-  {id:"real-player", name:"Real Madrid 24/25 Jogador", league:"ll", price:130, img:"./photo-1551854838-212c50b4c184", type:"jogador"}
+  {id:"fla-short", name:"Short Flamengo 24/25", league:"br", price:115, img:"https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?auto=format&fit=crop&w=800&q=80", type:"short"},
+  {id:"fla-wind", name:"Corta Vento Flamengo", league:"br", price:270, img:"https://images.unsplash.com/photo-1577212017184-80cc0da11082?auto=format&fit=crop&w=800&q=80", type:"cortavento"},
+  {id:"real-player", name:"Real Madrid 24/25 Jogador", league:"ll", price:130, img:"https://images.unsplash.com/photo-1551854838-212c50b4c184?auto=format&fit=crop&w=800&q=80", type:"jogador"}
 ];
 
 const pricingRules = {
@@ -157,10 +157,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Perfil
   const openProfileBtn = document.getElementById("openProfileBtn");
-  if(openProfileBtn) openProfileBtn.onclick = ()=> openAuth("login");
+  if(openProfileBtn) openProfileBtn.onclick = ()=>{
+    requireAuth(()=>{
+      renderProfileDrawer();
+      const drawer = document.getElementById("profileDrawer");
+      if(drawer) drawer.classList.add("open");
+    });
+  };
   
   const closeProfileBtn = document.getElementById("closeProfileBtn");
-  if(closeProfileBtn) closeProfileBtn.onclick = closeAuth;
+  if(closeProfileBtn) closeProfileBtn.onclick = closeProfile;
   
   const saveProfileBtn = document.getElementById("saveProfileBtn");
   if(saveProfileBtn) saveProfileBtn.onclick = ()=>{ 
@@ -176,6 +182,155 @@ document.addEventListener("DOMContentLoaded", () => {
 // Garantir que injectModal rode mesmo se DOMContentLoaded já passou
 if(document.body){ injectModal(); }
 
+// --- Perfil ---
+function openProfile(){
+  if(isAuthenticated()){
+    renderProfileDrawer();
+    const drawer = document.getElementById("profileDrawer");
+    if(drawer) drawer.classList.add("open");
+  }else{
+    openAuth("login");
+  }
+}
+function closeProfile(){
+  const drawer = document.getElementById("profileDrawer");
+  if(drawer) drawer.classList.remove("open");
+}
+function renderProfileDrawer(){
+  const u = JSON.parse(localStorage.getItem("authUser")||"null");
+  const helloUser = document.getElementById("helloUser");
+  if(helloUser) helloUser.innerText = u ? ("Olá, "+(u.login||u.email)) : "Bem-vindo!";
+  const emailEl = document.getElementById("profileEmail");
+  const cpfEl = document.getElementById("profileCPF");
+  if(emailEl) emailEl.value = u && u.email ? u.email : "";
+  if(cpfEl) cpfEl.value = u && u.cpf ? u.cpf : "";
+  const nameEl = document.getElementById("profileName");
+  const phoneEl = document.getElementById("profilePhone");
+  const addrEl = document.getElementById("profileAddress");
+  const birthEl = document.getElementById("profileBirthdate");
+  if(nameEl) nameEl.value = u && u.name ? u.name : (localStorage.getItem("profileName")||"");
+  if(phoneEl) phoneEl.value = u && u.phone ? u.phone : "";
+  if(addrEl) addrEl.value = u && u.address ? u.address : "";
+  if(birthEl) birthEl.value = u && u.birthdate ? u.birthdate : "";
+  const btnLogout = document.getElementById("btnLogout");
+  const btnChangePass = document.getElementById("btnChangePass");
+  if(btnLogout) btnLogout.onclick = logout;
+  if(btnChangePass) btnChangePass.onclick = changePassword;
+  const btnSave = document.getElementById("btnSaveProfile");
+  const btnCancel = document.getElementById("btnCancelProfile");
+  const btnEdit = document.getElementById("btnEditProfile");
+  if(btnSave) btnSave.onclick = saveProfileChanges;
+  if(btnCancel) btnCancel.onclick = closeProfile;
+  if(btnEdit) btnEdit.onclick = ()=> setProfileEditMode(true);
+  const avatarBox = document.getElementById("profileAvatar");
+  const avatarInput = document.getElementById("profileAvatarInput");
+  const avatar = u && u.avatar ? u.avatar : "";
+  if(avatarBox){
+    if(avatar && avatar.startsWith("data:image")) avatarBox.style.backgroundImage = "url('"+avatar+"')";
+    avatarBox.style.backgroundSize = "cover";
+    avatarBox.style.backgroundPosition = "center";
+    if(!avatar){ 
+      const letter = (u && (u.login||u.email||"U"))[0].toUpperCase();
+      avatarBox.textContent = letter;
+    }else{
+      avatarBox.textContent = "";
+    }
+  }
+  if(avatarInput){
+    avatarInput.onchange = ()=>{
+      const f = avatarInput.files && avatarInput.files[0];
+      if(!f) return;
+      const reader = new FileReader();
+      reader.onload = (e)=>{
+        const dataUrl = e.target.result;
+        if(avatarBox){
+          avatarBox.style.backgroundImage = "url('"+dataUrl+"')";
+          avatarBox.textContent = "";
+        }
+        const auth = JSON.parse(localStorage.getItem("authUser")||"null")||{};
+        auth.avatar = dataUrl;
+        localStorage.setItem("authUser", JSON.stringify(auth));
+      };
+      reader.readAsDataURL(f);
+    };
+    avatarInput.disabled = true;
+  }
+  setProfileEditMode(false);
+}
+function logout(){
+  localStorage.removeItem("authUser");
+  closeProfile();
+  showToast("Você saiu.");
+}
+function saveProfileChanges(){
+  const auth = JSON.parse(localStorage.getItem("authUser")||"null");
+  if(!auth){ openAuth("login"); return; }
+  const users = getUsers();
+  const idx = users.findIndex(x=>x.email===auth.email);
+  if(idx<0){ alert("Usuário não encontrado."); return; }
+  const name = (document.getElementById("profileName")||{value:""}).value.trim();
+  const phone = (document.getElementById("profilePhone")||{value:""}).value.trim();
+  const address = (document.getElementById("profileAddress")||{value:""}).value.trim();
+  const birthdate = (document.getElementById("profileBirthdate")||{value:""}).value;
+  const avatarBox = document.getElementById("profileAvatar");
+  let avatarData = auth.avatar || "";
+  const bg = avatarBox && avatarBox.style.backgroundImage;
+  if(bg && bg.startsWith('url(')) avatarData = bg.slice(5,-2);
+  users[idx].name = name;
+  users[idx].phone = phone;
+  users[idx].address = address;
+  users[idx].birthdate = birthdate;
+  users[idx].avatar = avatarData;
+  saveUsers(users);
+  const merged = Object.assign({}, auth, { name, phone, address, birthdate, avatar: avatarData });
+  localStorage.setItem("authUser", JSON.stringify(merged));
+  const helloUser = document.getElementById("helloUser");
+  if(helloUser) helloUser.innerText = name ? ("Olá, "+name) : ("Olá, "+(auth.login||auth.email));
+  showToast("Dados salvos com sucesso.", 4000);
+  setProfileEditMode(false);
+}
+function changePassword(){
+  const auth = JSON.parse(localStorage.getItem("authUser")||"null");
+  if(!auth){ openAuth("login"); return; }
+  const email = auth.email;
+  const cur = (document.getElementById("changePassCurrent")||{value:""}).value;
+  const neu = (document.getElementById("changePassNew")||{value:""}).value;
+  const conf = (document.getElementById("changePassConfirm")||{value:""}).value;
+  if(!cur || !neu || !conf){ alert("Preencha todas as senhas."); return; }
+  if(neu.length < 4){ alert("Nova senha muito curta."); return; }
+  if(neu !== conf){ alert("Confirmação não confere."); return; }
+  const users = getUsers();
+  const idx = users.findIndex(x=>x.email===email);
+  if(idx<0){ alert("Usuário não encontrado."); return; }
+  if(users[idx].password !== cur){ alert("Senha atual incorreta."); return; }
+  users[idx].password = neu;
+  users[idx].sessionVersion = (users[idx].sessionVersion||0)+1;
+  saveUsers(users);
+  const curAuth = JSON.parse(localStorage.getItem("authUser")||"null")||{};
+  curAuth.sessionVersion = users[idx].sessionVersion;
+  localStorage.setItem("authUser", JSON.stringify(curAuth));
+  showToast("Senha alterada. Logout em outros dispositivos aplicado.", 5000);
+  const fields = ["changePassCurrent","changePassNew","changePassConfirm"];
+  fields.forEach(id=>{ const el = document.getElementById(id); if(el) el.value=""; });
+}
+
+let profileEditMode = false;
+function setProfileEditMode(on){
+  profileEditMode = !!on;
+  const ids = ["profileName","profilePhone","profileAddress","profileBirthdate"];
+  ids.forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.disabled = !profileEditMode;
+  });
+  const avatarInput = document.getElementById("profileAvatarInput");
+  if(avatarInput) avatarInput.disabled = !profileEditMode;
+  const btnSave = document.getElementById("btnSaveProfile");
+  const btnCancel = document.getElementById("btnCancelProfile");
+  const btnEdit = document.getElementById("btnEditProfile");
+  if(btnSave) btnSave.style.display = profileEditMode ? "" : "none";
+  if(btnCancel) btnCancel.style.display = profileEditMode ? "" : "none";
+  if(btnEdit) btnEdit.style.display = profileEditMode ? "none" : "";
+}
 // --- Modal Logic ---
 
 function injectModal(){
@@ -461,10 +616,22 @@ function saveUsers(users){
   localStorage.setItem("users", JSON.stringify(users));
 }
 function isAuthenticated(){
-  return !!localStorage.getItem("authUser");
+  const auth = JSON.parse(localStorage.getItem("authUser")||"null");
+  if(!auth) return false;
+  const users = getUsers();
+  const u = users.find(x=>x.email===auth.email);
+  if(!u){ localStorage.removeItem("authUser"); return false; }
+  const svA = auth.sessionVersion||0;
+  const svU = u.sessionVersion||0;
+  if(svA !== svU){ localStorage.removeItem("authUser"); return false; }
+  return true;
 }
 function setAuthUser(user){
-  localStorage.setItem("authUser", JSON.stringify(user));
+  const users = getUsers();
+  const u = users.find(x=>x.email===user.email) || {};
+  const sessionVersion = u.sessionVersion||0;
+  const merged = Object.assign({}, u, user, { sessionVersion });
+  localStorage.setItem("authUser", JSON.stringify(merged));
 }
 function requireAuth(next){
   if(isAuthenticated()){
@@ -605,7 +772,8 @@ function handleAuthSubmit(){
       email, 
       password: pending.password,
       cpf: pending.cpf,
-      login: pending.login
+      login: pending.login,
+      sessionVersion: 0
     });
     saveUsers(users);
     postUserToDB({ email, login: pending.login || email, cpf: pending.cpf, password: pending.password });
