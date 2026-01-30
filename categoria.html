@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Football Pro Store - Categoria</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --accent:#c9a55c;
+  --primary:#111827;
+  --dark:#0a0a0a;
+  --gray:#94a3b8;
+  --muted:#64748b;
+  --bg:#0a0a0a;
+  --card:#0f172a;
+  --border:rgba(255,255,255,0.08);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial}
+
+body{background:var(--bg);color:#e5e7eb}
+
+.top-strip{position:sticky;top:0;z-index:60;background:#000;border-bottom:1px solid var(--border)}
+.top-strip .wrap{max-width:1200px;margin:auto;padding:8px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.top-links{display:flex;gap:16px;flex-wrap:wrap}
+.top-links a{color:#cbd5e1;text-decoration:none;font-size:.85rem}
+.top-links a:hover{color:#fff}
+.top-actions{display:flex;gap:16px;flex-wrap:wrap;color:#cbd5e1}
+
+.main-header{background:var(--bg);color:#e5e7eb;border-bottom:1px solid var(--border)}
+.main-header .wrap{max-width:1200px;margin:auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.icon-btn{width:40px;height:40px;border-radius:12px;border:1px solid var(--border);background:#111827;color:#e5e7eb;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#e5e7eb}
+.brand .logo{width:38px;height:38px;border-radius:10px;background:#000;display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:800}
+.brand span{font-weight:800;font-size:1.2rem}
+.right-icons{display:flex;align-items:center;gap:10px}
+.cart-btn{position:relative}
+.cart-count{position:absolute;top:-6px;right:-6px;background:var(--accent);color:#000;font-weight:800;width:22px;height:22px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:.8rem}
+
+.category-nav{background:var(--bg);position:sticky;top:0;z-index:60;border-bottom:1px solid var(--border)}
+.category-nav .wrap{max-width:1200px;margin:auto;padding:8px 20px;display:flex;gap:16px;flex-wrap:wrap}
+.category-nav a{color:var(--accent);text-decoration:none;font-weight:600;font-size:.92rem}
+.category-nav a:hover{color:#fff}
+.category-nav a.active{color:#fff;text-decoration:underline}
+
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:40px 20px;
+}
+
+.section-title{
+  font-size:1.6rem;
+  margin-bottom:18px;
+  border-left:6px solid var(--accent);
+  padding-left:10px;
+}
+
+.products{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:25px;
+}
+
+.card{
+  background:var(--card);
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+  transition:.3s;
+}
+
+.card:hover{transform:translateY(-8px)}
+
+.card img{
+  width:100%;
+  height:240px;
+  object-fit:cover;
+}
+
+.card .info{
+  padding:18px;
+}
+
+.badge{display:inline-block;background:rgba(201,165,92,.15);color:var(--accent);border:1px solid var(--accent);padding:4px 8px;border-radius:999px;font-size:.75rem;margin-bottom:8px}
+.card h3{font-size:1.1rem;margin-bottom:6px;color:#fff}
+
+.card span{
+  color:var(--muted);
+  font-size:.9rem;
+}
+.muted{color:var(--muted);font-size:.9rem}
+
+.price{
+  color:var(--accent);
+  font-weight:800;
+  margin:10px 0;
+}
+
+.card button{
+  width:100%;
+  padding:12px;
+  background:var(--accent);
+  color:#000;
+  border:none;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.card button:hover{filter:brightness(1.05)}
+
+.drawer{position:fixed;right:0;top:0;bottom:0;width:360px;background:#0f172a;border-left:1px solid var(--border);transform:translateX(100%);transition:.3s;display:flex;flex-direction:column;z-index:100}
+.drawer.open{transform:translateX(0)}
+.drawer header{padding:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.drawer main{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.drawer .item{display:flex;gap:10px;border:1px solid var(--border);border-radius:10px;padding:10px}
+.drawer footer{border-top:1px solid var(--border);padding:16px}
+.qty{display:flex;gap:8px;align-items:center}
+.qty button{background:#111827;border:1px solid var(--border);color:#e5e7eb;padding:6px 10px;border-radius:8px;cursor:pointer}
+.checkout{width:100%;padding:12px;background:var(--accent);color:#000;border:none;border-radius:10px;font-weight:700;cursor:pointer}
+.small-btn{background:#111827;border:1px solid var(--border);color:#e5e7eb;padding:6px 10px;border-radius:8px;cursor:pointer}
+
+footer{
+  background:#020617;
+  color:#94a3b8;
+  text-align:center;
+  padding:40px 20px;
+  margin-top:60px;
+}
+.sticky-header-container{position:sticky;top:0;z-index:60}
+.search{flex:1;max-width:520px;display:flex;align-items:center;gap:10px;background:#0a0a0a;border:1px solid rgba(201,165,92,.35);border-radius:999px;padding:10px 14px}
+.search input{flex:1;background:transparent;border:none;outline:none;color:#e5e7eb;font-size:0.95rem}
+.search input::placeholder{color:#c9a55c;opacity:.8}
+.search:focus-within{border-color:#c9a55c;box-shadow:0 0 0 3px rgba(201,165,92,.15)}
+</style>
+</head>
+
+<body>
+
+<div class="sticky-header-container">
+<div class="main-header">
+  <div class="wrap">
+    <div class="left-icons" style="display:flex;gap:8px">
+      <button id="openSearchBtn" class="icon-btn" title="Buscar">🔎</button>
+    </div>
+    <a class="brand" href="loja.html"><div class="logo">FS</div><span>FutShop</span></a>
+    <div class="right-icons">
+      <button id="openProfileBtn" class="icon-btn" title="Perfil">👤</button>
+      <button id="openCartBtn" class="icon-btn cart-btn" title="Carrinho">🛒<span id="cartCountBadge" class="cart-count">0</span></button>
+    </div>
+  </div>
+</div>
+
+<div id="categoryNav" class="category-nav">
+  <div class="wrap">
+    <a href="loja.html">Início</a>
+    <a href="categoria.html?c=new">Lançamentos</a>
+    <a href="categoria.html?c=br">Camisas</a>
+    <a href="categoria.html?c=cortavento">Corta-Ventos</a>
+    <a href="categoria.html?c=short">Shorts</a>
+    <a href="categoria.html?c=sel">Infantil</a>
+    <a href="categoria.html?c=br">Masculinas</a>
+    <a href="categoria.html?c=ll">Femininas</a>
+  </div>
+</div>
+</div>
+
+<div class="container">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <h2 class="section-title" id="pageTitle">Categoria</h2>
+    <div class="search"><input id="pageSearch" type="text" placeholder="O que você procura?"></div>
+  </div>
+  
+  <div id="productGrid" class="products"></div>
+</div>
+
+<aside id="cartDrawer" class="drawer" aria-hidden="true">
+  <header>
+    <strong>Carrinho</strong>
+    <button id="closeCartBtn" class="small-btn">Fechar</button>
+  </header>
+  <main id="cartItems"></main>
+  <footer>
+    <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+      <span class="muted">Subtotal</span>
+      <strong id="cartSubtotal">R$ 0,00</strong>
+    </div>
+    <button class="checkout" id="checkoutBtn">Finalizar compra</button>
+  </footer>
+</aside>
+
+<aside id="profileDrawer" class="drawer" aria-hidden="true">
+  <header>
+    <strong>Perfil</strong>
+    <button id="closeProfileBtn" class="small-btn">Fechar</button>
+  </header>
+  <main>
+    <div class="muted" id="helloUser" style="margin-bottom:8px"></div>
+    <label class="muted" style="margin-bottom:6px">Seu nome</label>
+    <div class="search" style="gap:6px"><input id="profileNameInput" type="text" placeholder="Digite seu nome"><button id="saveProfileBtn" class="small-btn">Salvar</button></div>
+  </main>
+  <footer></footer>
+</aside>
+
+<footer>
+<p>© 2026 Football Pro Store</p>
+<p>Projeto profissional de e-commerce esportivo</p>
+<p>
+  <a href="https://wa.me/5521991783806" class="muted" target="_blank" rel="noopener">WhatsApp (21) 99178-3806</a> · 
+  <a href="mailto:rodriguesnathan51@gmail.com" class="muted">rodriguesnathan51@gmail.com</a>
+</p>
+</footer>
+
+<script src="products.js"></script>
+<script>
+// Logic specific to category page
+document.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const filter = params.get("c") || "all";
+  const titleMap = {
+    "new": "Lançamentos",
+    "br": "Brasileirão",
+    "pl": "Premier League",
+    "ll": "La Liga",
+    "sel": "Seleções",
+    "eu": "Europeus",
+    "fem": "Femininas",
+    "kids": "Kit Infantil",
+    "all": "Todos os Produtos",
+    "short": "Shorts",
+    "cortavento": "Corta-Ventos",
+    "jogador": "Camisas de Jogador",
+    "torcedor": "Camisas de Torcedor"
+  };
+  
+  // Also handle "br" being used for Camisas/Corta-Ventos in the original code
+  // Since we don't have separate data for those yet, we just show the league/category name.
+  
+  document.getElementById("pageTitle").innerText = titleMap[filter] || "Produtos";
+
+  renderCategory(filter);
+
+  // Search within category
+  document.getElementById("pageSearch").addEventListener("input", (e)=>{
+    renderCategory(filter, e.target.value);
+  });
+  
+  // Highlight active link
+  const links = document.querySelectorAll(".category-nav a");
+  links.forEach(l => {
+    if(l.getAttribute("href").includes("c="+filter)){
+      l.classList.add("active");
+    }
+  });
+});
+
+function renderCategory(filter, query=""){
+  const grid = document.getElementById("productGrid");
+  grid.innerHTML = "";
+  
+  let items = products;
+  
+  // Special filters
+  if(filter === "new") {
+    items = products; 
+  } else if (filter === "eu") {
+    items = products.filter(p => p.league === "pl" || p.league === "ll");
+  } else if (filter !== "all") {
+    items = products.filter(p => p.league === filter || p.type === filter);
+  }
+  
+  if(query){
+    items = items.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
+  }
+  
+  if(items.length === 0){
+    grid.innerHTML = "<p class='muted'>Nenhum produto encontrado.</p>";
+    return;
+  }
+
+  items.forEach(p=>{
+    const card = document.createElement("div"); card.className="card";
+    card.innerHTML = `
+      <img src="${p.img}" alt="${p.name}">
+      <div class="info">
+        ${p.badge?`<span class="badge">${p.badge}</span>`:""}
+        <h3>${p.name}</h3>
+        <span>${p.league.toUpperCase()}</span>
+        <p class="price">${formatBR(p.price)}</p>
+        <button data-id="${p.id}">Adicionar ao carrinho</button>
+      </div>`;
+    card.querySelector("button").onclick = ()=> addCart(p.id);
+    grid.appendChild(card);
+  });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Football Pro Store - Pagamento</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --accent:#c9a55c;
+  --primary:#111827;
+  --dark:#0a0a0a;
+  --gray:#94a3b8;
+  --muted:#64748b;
+  --bg:#0a0a0a;
+  --card:#0f172a;
+  --border:rgba(255,255,255,0.08);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial}
+
+body{background:var(--bg);color:#e5e7eb}
+
+.main-header{background:var(--bg);color:#e5e7eb;border-bottom:1px solid var(--border)}
+.main-header .wrap{max-width:1200px;margin:auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#e5e7eb}
+.brand .logo{width:38px;height:38px;border-radius:10px;background:#000;display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:800}
+.brand span{font-weight:800;font-size:1.2rem}
+
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:40px 20px;
+  display:grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap:40px;
+}
+
+@media(max-width:768px){
+  .container{grid-template-columns:1fr}
+}
+
+.section-title{
+  font-size:1.6rem;
+  margin-bottom:24px;
+  border-left:6px solid var(--accent);
+  padding-left:10px;
+}
+
+.card-box{
+  background:var(--card);
+  border-radius:14px;
+  border:1px solid var(--border);
+  padding:24px;
+  margin-bottom:20px;
+}
+
+.form-group{margin-bottom:16px}
+.form-group label{display:block;margin-bottom:8px;font-weight:600;color:#cbd5e1}
+.form-group input, .form-group select{
+  width:100%;
+  padding:12px;
+  background:#111827;
+  border:1px solid var(--border);
+  border-radius:8px;
+  color:#fff;
+  outline:none;
+}
+.form-group input:focus{border-color:var(--accent)}
+
+.row{display:flex;gap:16px}
+.col{flex:1}
+
+.order-item{
+  display:flex;
+  gap:16px;
+  padding-bottom:16px;
+  margin-bottom:16px;
+  border-bottom:1px solid var(--border);
+}
+.order-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+
+.order-item img{
+  width:80px;
+  height:80px;
+  object-fit:cover;
+  border-radius:8px;
+}
+
+.summary-row{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:12px;
+  font-size:1.05rem;
+}
+.summary-total{
+  display:flex;
+  justify-content:space-between;
+  margin-top:20px;
+  padding-top:20px;
+  border-top:1px solid var(--border);
+  font-size:1.4rem;
+  font-weight:800;
+  color:var(--accent);
+}
+
+.checkout-btn{
+  width:100%;
+  padding:16px;
+  background:var(--accent);
+  color:#000;
+  border:none;
+  border-radius:10px;
+  font-weight:700;
+  font-size:1.1rem;
+  cursor:pointer;
+  margin-top:20px;
+}
+.checkout-btn:hover{filter:brightness(1.05)}
+
+.muted{color:var(--muted);font-size:0.9rem}
+
+</style>
+</head>
+
+<body>
+
+<header class="main-header">
+  <div class="wrap">
+    <a class="brand" href="loja.html"><div class="logo">FS</div><span>FutShop</span></a>
+    <div style="font-weight:600;color:var(--gray)">Finalizar Compra</div>
+  </div>
+</header>
+
+<div class="container">
+  
+  <!-- Left Column: Form -->
+  <div>
+    <h2 class="section-title">Dados de Pagamento</h2>
+    
+    <div class="card-box">
+      <h3 style="margin-bottom:20px">Informações Pessoais</h3>
+      <div class="form-group">
+        <label>Nome Completo</label>
+        <input id="payName" type="text" placeholder="Ex: João da Silva">
+      </div>
+      <div class="form-group">
+        <label>E-mail</label>
+        <input id="payEmail" type="email" placeholder="seu@email.com">
+      </div>
+      <div class="form-group">
+        <label>CPF</label>
+        <input id="payCPF" type="text" placeholder="000.000.000-00">
+      </div>
+    </div>
+    
+    <div class="card-box">
+      <h3 style="margin-bottom:20px">Personalização</h3>
+      <div id="personalizationBox" class="muted">Nenhuma camisa personalizada.</div>
+    </div>
+
+    <div class="card-box">
+      <h3 style="margin-bottom:20px">Endereço de Entrega</h3>
+      <div class="row">
+        <div class="col form-group">
+          <label>CEP</label>
+          <input id="payCEP" type="text" placeholder="00000-000">
+        </div>
+        <div class="col form-group">
+          <label>Cidade</label>
+          <input id="payCity" type="text" placeholder="Cidade">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Endereço</label>
+        <input id="payAddress" type="text" placeholder="Rua, Número, Bairro">
+      </div>
+    </div>
+
+    <div class="card-box">
+      <h3 style="margin-bottom:20px">Pagamento</h3>
+      <div class="form-group">
+        <label>Forma de Pagamento</label>
+        <select>
+          <option>Pix (Aprovação Imediata)</option>
+          <option>Cartão de Crédito</option>
+          <option>Boleto Bancário</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Número do Cartão (se escolhido)</label>
+        <input type="text" placeholder="0000 0000 0000 0000">
+      </div>
+      <div class="row">
+        <div class="col form-group">
+          <label>Validade</label>
+          <input type="text" placeholder="MM/AA">
+        </div>
+        <div class="col form-group">
+          <label>CVV</label>
+          <input type="text" placeholder="123">
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- Right Column: Order Summary -->
+  <div>
+    <h2 class="section-title">Resumo do Pedido</h2>
+    <div class="card-box">
+      <div id="orderItems">
+        <!-- Items injected by JS -->
+      </div>
+      
+      <div class="summary-total">
+        <span>Total</span>
+        <span id="orderTotal">R$ 0,00</span>
+      </div>
+      
+      <button class="checkout-btn" onclick="finishOrder()">Confirmar Pagamento</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="products.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  requireAuth(()=>{
+    loadCart();
+    renderOrderSummary();
+    prefillProfile();
+    const cpfEl = document.getElementById("payCPF");
+    if(cpfEl){ cpfEl.addEventListener("input", ()=>{ cpfEl.value = typeof formatCPF==="function" ? formatCPF(cpfEl.value) : cpfEl.value; }); }
+    setupCEPMaskAndLookup();
+    renderPersonalizationFields();
+  });
+});
+
+function renderOrderSummary(){
+  const wrap = document.getElementById("orderItems");
+  const totalEl = document.getElementById("orderTotal");
+  
+  if(cart.length === 0){
+    wrap.innerHTML = "<p class='muted'>Seu carrinho está vazio.</p>";
+    totalEl.innerText = "R$ 0,00";
+    return;
+  }
+
+  wrap.innerHTML = "";
+  
+  // Recalculate logic (copied/shared from products.js renderCart)
+  const typeCounts = {};
+  cart.forEach(item => {
+    const t = item.type || 'torcedor';
+    typeCounts[t] = (typeCounts[t] || 0) + item.qty;
+  });
+
+  let subtotal = 0;
+
+  cart.forEach(item => {
+    const currentType = item.type || 'torcedor';
+    const totalQtyOfType = typeCounts[currentType] || 0;
+    const unitPrice = getDynamicPrice(currentType, totalQtyOfType);
+    const up = item.customization==="Personalizada" ? 20 : 0;
+    const unitDisplay = unitPrice + up;
+    const itemTotal = unitDisplay * item.qty;
+    
+    subtotal += itemTotal;
+
+    const div = document.createElement("div");
+    div.className = "order-item";
+    div.innerHTML = `
+      <img src="${item.img}" alt="${item.name}">
+      <div style="flex:1">
+        <div style="font-weight:700;margin-bottom:4px">${item.name}</div>
+        <div class="muted">${item.qty}x ${formatBR(unitDisplay)}</div>
+        ${unitPrice < (pricingRules[currentType][1]) ? `<div style="color:#16a34a;font-size:0.85rem;margin-top:2px">Desconto aplicado</div>` : ''}
+      </div>
+      <div style="font-weight:700">${formatBR(itemTotal)}</div>
+    `;
+    wrap.appendChild(div);
+  });
+
+  totalEl.innerText = formatBR(subtotal);
+}
+
+function finishOrder(){
+  if(cart.length === 0){
+    alert("Seu carrinho está vazio!");
+    return;
+  }
+  // Validate personalization fields if needed
+  const personalized = cart.filter(i => i.customization==="Personalizada");
+  if(personalized.length>0){
+    for(let pidx=0; pidx<personalized.length; pidx++){
+      const item = personalized[pidx];
+      for(let j=1; j<=item.qty; j++){
+        const key = (item.cartId || ("idx"+pidx))+"-"+j;
+        const nameVal = (document.getElementById(`pers-${key}-name`)||{value:""}).value.trim();
+        const numVal = (document.getElementById(`pers-${key}-number`)||{value:""}).value.trim();
+        if(!nameVal || !numVal){
+          alert("Preencha nome e número para todas as camisas personalizadas.");
+          return;
+        }
+        const numDigits = numVal.replace(/\D/g,"");
+        const numInt = parseInt(numDigits,10);
+        if(!(numDigits.length>0) || isNaN(numInt) || numInt<0 || numInt>99){
+          alert("Número da camisa deve ser entre 0 e 99.");
+          return;
+        }
+      }
+    }
+  }
+  const cpf = document.getElementById("payCPF").value.trim();
+  if(!cpf || !(typeof validateCPF==="function" ? validateCPF(cpf) : /^[0-9]{3}\.?[0-9]{3}\.?[0-9]{3}\-?[0-9]{2}$/.test(cpf))){
+    alert("CPF inválido.");
+    return;
+  }
+  const persSummary = [];
+  personalized.forEach((item, pidx) => {
+    for(let j=1; j<=item.qty; j++){
+      const key = (item.cartId || ("idx"+pidx))+"-"+j;
+      const nameVal = (document.getElementById(`pers-${key}-name`)||{value:""}).value.trim();
+      const numVal = (document.getElementById(`pers-${key}-number`)||{value:""}).value.trim();
+      persSummary.push({ product: item.name, idx: j, name: nameVal, number: numVal });
+    }
+  });
+  try{ localStorage.setItem("orderPersonalization", JSON.stringify(persSummary)); }catch(e){}
+  alert("Pagamento confirmado com sucesso! Obrigado pela compra.");
+  localStorage.removeItem("storeCart");
+  window.location.href = "loja.html";
+}
+
+function prefillProfile(){
+  try{
+    const u = JSON.parse(localStorage.getItem("authUser")||"null");
+    if(!u) return;
+    if(u.email) document.getElementById("payEmail").value = u.email;
+    if(u.cpf) document.getElementById("payCPF").value = u.cpf;
+  }catch(e){}
+}
+
+function renderPersonalizationFields(){
+  const box = document.getElementById("personalizationBox");
+  if(!box) return;
+  const personalized = cart.filter(i => i.customization==="Personalizada");
+  if(personalized.length===0){
+    box.innerHTML = "<p class='muted'>Nenhuma camisa personalizada.</p>";
+    return;
+  }
+  box.innerHTML = "";
+  personalized.forEach((item, pidx) => {
+    for(let j=1; j<=item.qty; j++){
+      const key = (item.cartId || ("idx"+pidx))+"-"+j;
+      const wrap = document.createElement("div");
+      wrap.className = "form-group";
+      wrap.innerHTML = `
+        <label>${item.name} ${item.size ? "(" + item.size + ")" : ""} — Camisa ${j}</label>
+        <div class="row">
+          <div class="col">
+            <input id="pers-${key}-name" type="text" placeholder="Nome (camisa ${j})">
+          </div>
+          <div class="col">
+            <input id="pers-${key}-number" type="text" placeholder="Número (camisa ${j})">
+          </div>
+        </div>
+      `;
+      box.appendChild(wrap);
+      const nameEl = wrap.querySelector(`#pers-${key}-name`);
+      const numEl = wrap.querySelector(`#pers-${key}-number`);
+      if(nameEl){
+        nameEl.addEventListener("input", ()=>{ nameEl.value = nameEl.value.toUpperCase().slice(0,16); });
+      }
+      if(numEl){
+        numEl.addEventListener("input", ()=>{
+          const d = numEl.value.replace(/\D/g,"").slice(0,2);
+          numEl.value = d;
+        });
+      }
+    }
+  });
+}
+
+function setupCEPMaskAndLookup(){
+  const cepEl = document.getElementById("payCEP");
+  const cityEl = document.getElementById("payCity");
+  const addrEl = document.getElementById("payAddress");
+  if(!cepEl) return;
+  cepEl.addEventListener("input", ()=>{
+    const d = cepEl.value.replace(/\D/g,"").slice(0,8);
+    cepEl.value = d.length>5 ? d.slice(0,5)+"-"+d.slice(5) : d;
+    if(d.length===8) lookupCEP(d, cityEl, addrEl);
+  });
+  cepEl.addEventListener("blur", ()=>{
+    const d = cepEl.value.replace(/\D/g,"");
+    if(d.length===8) lookupCEP(d, cityEl, addrEl);
+  });
+}
+
+async function lookupCEP(d, cityEl, addrEl){
+  try{
+    const res = await fetch(`https://viacep.com.br/ws/${d}/json/`);
+    const data = await res.json();
+    if(data && !data.erro){
+      if(cityEl) cityEl.value = data.localidade || "";
+      if(addrEl){
+        const bairro = data.bairro ? ", "+data.bairro : "";
+        addrEl.value = (data.logradouro||"")+bairro;
+      }
+    }else{
+      alert("CEP não encontrado.");
+    }
+  }catch(e){}
+}
+</script>
+
+</body>
+</html>
