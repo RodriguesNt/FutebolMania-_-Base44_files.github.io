@@ -391,6 +391,7 @@ footer .pay{padding:6px 10px;border:1px solid var(--border);border-radius:8px;ba
 </div>
 
 <script src="products.js"></script>
+<script src="loja_init.js"></script>
 <script>
 function renderFeatured(){
   const grid = document.getElementById("featuredGrid");
@@ -398,13 +399,17 @@ function renderFeatured(){
   const items = products.filter(p=>p.featured);
   items.forEach(p=>{
     const card = document.createElement("div"); card.className="card";
+    const minPrice = (p.price_torcedor!=null && p.price_jogador!=null) ? Math.min(p.price_torcedor, p.price_jogador) :
+                     (p.price_torcedor!=null ? p.price_torcedor : (p.price_jogador!=null ? p.price_jogador : p.price));
+    const maxPrice = (p.price_torcedor!=null && p.price_jogador!=null) ? Math.max(p.price_torcedor, p.price_jogador) : null;
+    const priceLabel = maxPrice!=null ? \`${formatBR(minPrice)} - ${formatBR(maxPrice)}\` : \`${formatBR(minPrice)}\`;
     card.innerHTML = `
-      <img src="${p.img}" alt="${p.name}">
+      <img src="${(p.images && p.images.length>0)?p.images[0]:p.img}" alt="${p.name}" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%27600%27 height=%27400%27><rect width=%27100%25%27 height=%27100%25%27 fill=%27%230f172a%27/><text x=%2750%25%27 y=%2750%25%27 fill=%27%23c9a55c%27 font-size=%2724%27 text-anchor=%27middle%27 dominant-baseline=%27middle%27>Sem imagem</text></svg>'">
       <div class="info">
         ${p.badge?`<span class="badge">${p.badge}</span>`:""}
         <h3>${p.name}</h3>
         <span>${p.league.toUpperCase()}</span>
-        <p class="price">${formatBR(p.price)}</p>
+        <p class="price">${priceLabel}</p>
         <button data-id="${p.id}">Adicionar ao carrinho</button>
       </div>`;
     card.querySelector("button").onclick = ()=> addCart(p.id);
@@ -424,9 +429,9 @@ function renderTopicGrid(gridId, filter){
   }else if(filter==="sel"){
     items = products.filter(p=>p.league==="sel");
   }else if(filter==="fem"){
-    items = products.filter(p=>p.league==="ll");
+    items = products.filter(p=>p.league==="fem");
   }else if(filter==="kids"){
-    items = products.filter(p=>p.league==="sel");
+    items = products.filter(p=>p.league==="kids");
   }
   items = items.slice(0,4);
   if(items.length===0){
@@ -436,7 +441,7 @@ function renderTopicGrid(gridId, filter){
   items.forEach(p=>{
     const card = document.createElement("div"); card.className="card";
     card.innerHTML = `
-      <img src="${p.img}" alt="${p.name}">
+      <img src="${(p.images && p.images.length>0)?p.images[0]:p.img}" alt="${p.name}" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%27600%27 height=%27400%27><rect width=%27100%25%27 height=%27100%25%27 fill=%27%230f172a%27/><text x=%2750%25%27 y=%2750%25%27 fill=%27%23c9a55c%27 font-size=%2724%27 text-anchor=%27middle%27 dominant-baseline=%27middle%27>Sem imagem</text></svg>'">
       <div class="info">
         ${p.badge?`<span class="badge">${p.badge}</span>`:""}
         <h3>${p.name}</h3>
@@ -459,7 +464,7 @@ function renderAll(filter="all", q=""){
   items.forEach(p=>{
     const card = document.createElement("div"); card.className="card";
     card.innerHTML = `
-      <img src="${p.img}" alt="${p.name}">
+      <img src="${(p.images && p.images.length>0)?p.images[0]:p.img}" alt="${p.name}" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%27600%27 height=%27400%27><rect width=%27100%25%27 height=%27100%25%27 fill=%27%230f172a%27/><text x=%2750%25%27 y=%2750%25%27 fill=%27%23c9a55c%27 font-size=%2724%27 text-anchor=%27middle%27 dominant-baseline=%27middle%27>Sem imagem</text></svg>'">
       <div class="info">
         ${p.badge?`<span class="badge">${p.badge}</span>`:""}
         <h3>${p.name}</h3>
@@ -500,13 +505,15 @@ if(searchInput){ searchInput.addEventListener("input", (e)=>{ openProducts(); do
 // Clicking inside searchInput will open the products drawer
 document.getElementById("openSearchBtn") && (document.getElementById("openSearchBtn").onclick = ()=>{ openProducts(); renderAll("all",""); });
 
-// Initialize Home
-renderFeatured();
-renderTopicGrid("gridBr","br");
-renderTopicGrid("gridEu","eu");
-renderTopicGrid("gridSel","sel");
-renderTopicGrid("gridFem","fem");
-renderTopicGrid("gridKids","kids");
+// Initialize Home after products load
+document.addEventListener("productsLoaded", ()=>{
+  renderFeatured();
+  renderTopicGrid("gridBr","br");
+  renderTopicGrid("gridEu","eu");
+  renderTopicGrid("gridSel","sel");
+  renderTopicGrid("gridFem","fem");
+  renderTopicGrid("gridKids","kids");
+});
 const nf = document.getElementById("newsletterForm");
 if(nf){
   nf.addEventListener("submit",(e)=>{

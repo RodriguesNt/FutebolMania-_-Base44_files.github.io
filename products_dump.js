@@ -497,7 +497,7 @@ function injectModal(){
   modal.className = "modal-overlay";
   modal.innerHTML = `
     <div class="modal-content">
-      <button class="modal-close" onclick="closeModal()">Ã—</button>
+      <button class="modal-close" onclick="closeModal()">Ã?</button>
       <div class="modal-left">
         <img id="m-img" src="" alt="">
       </div>
@@ -530,14 +530,14 @@ function injectModal(){
         </div>
 
         <div class="personalize-banner">
-          ğŸ‘• Personalize com Fontes da Ã‰poca de LanÃ§amento
+          ğ??? Personalize com Fontes da Ã?poca de LanÃ§amento
         </div>
 
         <div class="action-row">
           <div class="qty-selector">
-            <button class="qty-btn" onclick="adjustModalQty(-1)">â€¹</button>
+            <button class="qty-btn" onclick="adjustModalQty(-1)">â?¹</button>
             <div id="m-qty" class="qty-val">1</div>
-            <button class="qty-btn" onclick="adjustModalQty(1)">â€º</button>
+            <button class="qty-btn" onclick="adjustModalQty(1)">â?º</button>
           </div>
           <button class="buy-btn" onclick="confirmAddToModal()">COMPRAR</button>
         </div>
@@ -784,14 +784,14 @@ function injectAuthModal(){
         <label>Senha</label>
         <div class="pass-wrapper">
           <input id="authPassword" type="password" class="auth-input" placeholder="Sua senha" style="padding-right:40px">
-          <button type="button" class="pass-toggle" onclick="togglePass('authPassword', this)">ğŸ‘ï¸</button>
+          <button type="button" class="pass-toggle" onclick="togglePass('authPassword', this)">ğ??ï¸</button>
         </div>
       </div>
       <div class="auth-group" id="authConfirmGroup" style="display:none">
         <label>Confirmar Senha</label>
         <div class="pass-wrapper">
           <input id="authConfirmPassword" type="password" class="auth-input" placeholder="Repita a senha" style="padding-right:40px">
-          <button type="button" class="pass-toggle" onclick="togglePass('authConfirmPassword', this)">ğŸ‘ï¸</button>
+          <button type="button" class="pass-toggle" onclick="togglePass('authConfirmPassword', this)">ğ??ï¸</button>
         </div>
       </div>
       <div id="authExtra" style="display:none">
@@ -976,10 +976,10 @@ function togglePass(id, btn){
   const inp = document.getElementById(id);
   if(inp.type==="password"){
     inp.type="text";
-    btn.innerText="ğŸ”’"; // Icone de "esconder" (pode ser outro)
+    btn.innerText="ğ???"; // Icone de "esconder" (pode ser outro)
   }else{
     inp.type="password";
-    btn.innerText="ğŸ‘ï¸";
+    btn.innerText="ğ??ï¸";
   }
 }
 function generateCode(){
@@ -1097,3 +1097,4 @@ async function postUserToDB({email, login, cpf, password, name, phone}){
     console.error("Erro de conexÃ£o ao salvar usuÃ¡rio:", e);
   }
 }
+

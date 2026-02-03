@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Painel Administrativo - Football Pro Store</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root{
+  --accent:#c9a55c;
+  --primary:#111827;
+  --dark:#0a0a0a;
+  --gray:#94a3b8;
+  --muted:#64748b;
+  --bg:#0a0a0a;
+  --card:#0f172a;
+  --border:rgba(255,255,255,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial}
+body{background:var(--bg);color:#e5e7eb;padding:20px}
+.admin-container { max-width: 1000px; margin: auto; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+.btn { padding: 10px 15px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; transition: .2s; }
+.btn:hover { filter: brightness(1.1); }
+.btn-primary { background: var(--accent); color: #000; }
+.btn-danger { background: #ef4444; color: #fff; }
+.btn-secondary { background: #374151; color: #fff; }
+
+.product-list { display: grid; gap: 10px; }
+.product-item { background: var(--card); padding: 10px; border-radius: 8px; display: flex; align-items: center; gap: 15px; border: 1px solid var(--border); }
+.product-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; background: #000; }
+.product-info { flex: 1; }
+.product-actions { display: flex; gap: 8px; }
+
+.form-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(4px); }
+.form-content { background: #1f2937; padding: 24px; border-radius: 12px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; border: 1px solid var(--border); }
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 6px; color: var(--gray); font-size: 0.9rem; }
+.form-group input, .form-group select { width: 100%; padding: 10px; background: #374151; border: 1px solid #4b5563; color: #fff; border-radius: 6px; outline: none; }
+.form-group input:focus, .form-group select:focus { border-color: var(--accent); }
+
+h1 { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="admin-container">
+  <div class="header">
+    <h1>Painel Administrativo</h1>
+    <div style="display:flex;align-items:center;gap:15px">
+      <span id="adminName" style="color:var(--gray)">Admin</span>
+      <a href="loja.html" class="btn btn-secondary" style="text-decoration:none">Voltar à Loja</a>
+      <button class="btn btn-secondary" onclick="logout()">Sair</button>
+    </div>
+  </div>
+  
+  <div style="margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center;">
+    <button class="btn btn-primary" onclick="openModal()">+ Adicionar Produto</button>
+    <span id="prodCount" style="color:var(--muted)">0 produtos</span>
+  </div>
+
+  <div id="productList" class="product-list">
+    <div style="text-align:center; padding: 40px; color: var(--muted);">Carregando produtos...</div>
+  </div>
+</div>
+
+<div id="productModal" class="form-modal">
+  <div class="form-content">
+    <h2 id="modalTitle" style="margin-bottom: 20px; color:#fff">Novo Produto</h2>
+    <form id="productForm">
+      <input type="hidden" id="prodId">
+      
+      <div class="form-group">
+        <label>Nome do Produto</label>
+        <input type="text" id="prodName" required placeholder="Ex: Camisa Flamengo I 24/25">
+      </div>
+      
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div class="form-group">
+          <label>Preço Torcedor (R$)</label>
+          <input type="number" id="priceTorcedor" step="0.01" placeholder="Ex: 100">
+        </div>
+        <div class="form-group">
+          <label>Preço Jogador (R$)</label>
+          <input type="number" id="priceJogador" step="0.01" placeholder="Ex: 130">
+        </div>
+      </div>
+      
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div class="form-group">
+          <label>Liga / Categoria</label>
+          <select id="prodLeague">
+            <option value="br">Brasileirão</option>
+            <option value="pl">Premier League</option>
+            <option value="ll">La Liga</option>
+            <option value="sel">Seleções</option>
+            <option value="fem">Femininas</option>
+            <option value="kids">Infantil</option>
+            <option value="other">Outros</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div class="form-group">
+          <label>Tipo (Define preço base)</label>
+          <select id="prodType">
+            <option value="torcedor">Torcedor</option>
+            <option value="jogador">Jogador</option>
+            <option value="cortavento">Corta-Vento</option>
+            <option value="short">Short</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Badge (Opcional)</label>
+          <input type="text" id="prodBadge" placeholder="Ex: Lançamento">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Imagens do Produto</label>
+        <input type="file" id="prodImgFile" accept="image/*" multiple>
+        <input type="hidden" id="prodImagesJson">
+        <div id="imgPreview" style="margin-top: 10px; min-height: 120px; background: #111827; border-radius:8px; border:1px dashed #4b5563; display: grid; grid-template-columns: repeat(auto-fill, minmax(90px,1fr)); gap:8px; padding:8px; color: #666;">
+          <div style="grid-column: 1 / -1; text-align:center;">Pré-visualização</div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>URLs de imagens (um por linha, opcional)</label>
+        <textarea id="prodImageUrls" placeholder="https://exemplo.com/img1.jpg&#10;https://exemplo.com/img2.png" style="width:100%; min-height: 90px; padding:10px; background:#374151; border:1px solid #4b5563; color:#fff; border-radius:6px;"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label style="display:flex; align-items:center; gap: 10px; cursor:pointer">
+          <input type="checkbox" id="prodFeatured" style="width:auto"> 
+          Destacar na Home?
+        </label>
+      </div>
+      
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar Produto</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="products.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

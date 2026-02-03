@@ -1,8 +1,16 @@
 [
-  {
-    "email": "v70bh@virgilian.com",
-    "login": "asdasd",
-    "cpf": "537.785.320-22",
-    "password_hash": "688787d8ff144c502c7f5cffaafe2cc588d86079f9de88304c26b0cb99ce91c6"
-  }
+    {
+        "email": "v70bh@virgilian.com",
+        "login": "asdasd",
+        "cpf": "537.785.320-22",
+        "password_hash": "688787d8ff144c502c7f5cffaafe2cc588d86079f9de88304c26b0cb99ce91c6"
+    },
+    {
+        "email": "dsfasf@gmail.com",
+        "login": "asdasd",
+        "cpf": "191.368.437-76",
+        "password_hash": "66166df4464661be6cb31128b85483ae127bf46a6960e826fd22bfb3ab244a67",
+        "name": "asdasd",
+        "phone": "(21) 99178-3806"
+    }
 ]
